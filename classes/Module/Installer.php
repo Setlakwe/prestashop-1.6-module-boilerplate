@@ -43,11 +43,112 @@ class Installer
         // Make directories for images, caches, logs, etc.
 
         // Install database tables
-        // $this->db->execute($this->getDatabaseMigrationSQL('up/model1'));
+        $this->db->execute($this->getDatabaseMigrationSQL('up/model1'));
 
         // Register hooks
         $this->module->registerHook([
-            // 'displayHeader',
+            'DisplayHeader',
+            'ActionAdminLanguagesControllerStatusBefore',
+            'ActionAdminMetaControllerUpdate_optionsBefore',
+            'ActionAdminMetaSave',
+            'ActionAttributeDelete',
+            'ActionAttributeGroupDelete',
+            'ActionAttributeGroupSave',
+            'ActionAttributePostProcess',
+            'ActionAttributeSave',
+            'ActionCarrierProcess',
+            'ActionCarrierUpdate',
+            'ActionCartSave',
+            'ActionCategoryAdd',
+            'ActionCategoryDelete',
+            'ActionCategoryUpdate',
+            'ActionCustomerAccountAdd',
+            'ActionFeatureDelete',
+            'ActionFeatureSave',
+            'ActionFeatureValueDelete',
+            'ActionFeatureValueSave',
+            'ActionHtaccessCreate',
+            'ActionObjectCategoryDeleteAfter',
+            'ActionObjectCategoryUpdateAfter',
+            'ActionObjectCmsDeleteAfter',
+            'ActionObjectCmsUpdateAfter',
+            'ActionObjectManufacturerDeleteAfter',
+            'ActionObjectManufacturerUpdateAfter',
+            'ActionObjectProductDeleteAfter',
+            'ActionObjectProductUpdateAfter',
+            'ActionObjectSupplierDeleteAfter',
+            'ActionObjectSupplierUpdateAfter',
+            'ActionOrderDetail',
+            'ActionOrderReturn',
+            'ActionOrderSlipAdd',
+            'ActionOrderStatusPostUpdate',
+            'ActionOrderStatusUpdate',
+            'ActionPaymentCCAdd',
+            'ActionProductAdd',
+            'ActionProductAttributeDelete',
+            'ActionProductAttributeUpdate',
+            'ActionProductCancel',
+            'ActionProductDelete',
+            'ActionProductListOverride',
+            'ActionProductOutOfStock',
+            'ActionProductSave',
+            'ActionProductUpdate',
+            'ActionShopDataDuplication',
+            'ActionTaxManager',
+            'ActionUpdateQuantity',
+            'ActionValidateOrder',
+            'ActionWatermark',
+            'DisplayAdminCustomers',
+            'DisplayAdminOrder',
+            'DisplayAdminStatsGraphEngine',
+            'DisplayAdminStatsGridEngine',
+            'DisplayAdminStatsModules',
+            'DisplayAttributeForm',
+            'DisplayAttributeGroupForm',
+            'DisplayAttributeGroupPostProcess',
+            'DisplayBackOfficeFooter',
+            'DisplayBackOfficeHeader',
+            'DisplayBackOfficeHome',
+            'DisplayBackOfficeTop',
+            'DisplayCarrierList',
+            'DisplayFeatureForm',
+            'DisplayFeaturePostProcess',
+            'DisplayFeatureValueForm',
+            'DisplayFeatureValuePostProcess',
+            'ActionPaymentConfirmation',
+            'ActionSearch',
+            'DisplayBeforeCarrier',
+            'DisplayBeforePayment',
+            'DisplayCustomerAccount',
+            'DisplayCustomerAccountForm',
+            'ActionAuthentication',
+            'ActionBeforeAuthentication',
+            'ActionBeforeSubmitAccount',
+            'DisplayCustomerAccountFormTop',
+            'DisplayFooter',
+            'DisplayFooterProduct',
+            'DisplayHome',
+            'DisplayInvoice',
+            'DisplayLeftColumn',
+            'DisplayLeftColumnProduct',
+            'DisplayMobileTopSiteMap',
+            'DisplayMyAccountBlock',
+            'DisplayMyAccountBlockfooter',
+            'DisplayOrderConfirmation',
+            'DisplayOrderDetail',
+            'DisplayPDFInvoice',
+            'DisplayPayment',
+            'DisplayPaymentReturn',
+            'DisplayPaymentTop',
+            'DisplayProductButtons',
+            'DisplayProductComparison',
+            'DisplayProductTab',
+            'DisplayProductTabContent',
+            'DisplayRightColumn',
+            'DisplayRightColumnProduct',
+            'DisplayShoppingCart',
+            'DisplayShoppingCartFooter',
+            'DisplayTop',
         ]);
 
         // Install admin controllers
@@ -71,7 +172,7 @@ class Installer
      */
     public function getDatabaseMigrationSQL($name)
     {
-        $filePath = $this->module->getLocalPath().'database/migrations/'.$name.'.sql';
+        $filePath = $this->module->getLocalPath() . 'database/migrations/' . $name . '.sql';
 
         if (!file_exists($filePath)) {
             return false;
@@ -87,12 +188,12 @@ class Installer
                 'ENGINE = INNODB'
             ],
             [
-                '`'._DB_PREFIX_,
-                'TABLE `'._DB_PREFIX_,
-                'TABLE '._DB_PREFIX_,
-                'EXISTS `'._DB_PREFIX_,
-                'EXISTS '._DB_PREFIX_,
-                'ENGINE = '._MYSQL_ENGINE_
+                '`' . _DB_PREFIX_,
+                'TABLE `' . _DB_PREFIX_,
+                'TABLE ' . _DB_PREFIX_,
+                'EXISTS `' . _DB_PREFIX_,
+                'EXISTS ' . _DB_PREFIX_,
+                'ENGINE = ' . _MYSQL_ENGINE_
             ],
             file_get_contents($filePath)
         );
@@ -101,7 +202,7 @@ class Installer
     /**
      * Returns language IDs
      *
-     * @param bool     $active
+     * @param bool $active
      * @param int|null $id_shop
      *
      * @return array
@@ -119,8 +220,8 @@ class Installer
     /**
      * Installs a module admin controller and a back-office tab (optional)
      *
-     * @param string     $className Controller class name without word 'Controller' at the end
-     * @param string     $tabTitle  Single string or a language array
+     * @param string $className Controller class name without word 'Controller' at the end
+     * @param string $tabTitle Single string or a language array
      * @param string|int $tabParent Parent tab class name or ID
      *
      * @return int|false
@@ -131,8 +232,8 @@ class Installer
 
         $tab = new Tab();
         $tab->class_name = $className;
-        $tab->module     = $this->module->name;
-        $tab->name       = is_array($title) ? $title : array_fill_keys(self::getLangIds(), $title);
+        $tab->module = $this->module->name;
+        $tab->name = is_array($title) ? $title : array_fill_keys(self::getLangIds(), $title);
 
         if (!empty($tabParent) && is_string($tabParent)) {
             $tab->id_parent = (int)Tab::getIdFromClassName($tabParent);
